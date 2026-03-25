@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PicklePro Analyzer - AI Video Coach</title>
+    <link rel="stylesheet" href="src/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2.5"/>
+                        <circle cx="20" cy="20" r="8" fill="currentColor"/>
+                        <line x1="20" y1="2" x2="20" y2="10" stroke="currentColor" stroke-width="2"/>
+                        <line x1="20" y1="30" x2="20" y2="38" stroke="currentColor" stroke-width="2"/>
+                        <line x1="2" y1="20" x2="10" y2="20" stroke="currentColor" stroke-width="2"/>
+                        <line x1="30" y1="20" x2="38" y2="20" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </div>
+                <span class="logo-text">PicklePro<span class="logo-accent">Analyzer</span></span>
+            </div>
+            <button class="settings-btn" onclick="toggleSettings()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                </svg>
+            </button>
+        </header>
+
+        <!-- Settings Panel -->
+        <div class="settings-panel" id="settingsPanel">
+            <div class="settings-content">
+                <h3>API Configuration</h3>
+                <p class="settings-description">Enter your API key to enable AI-powered video analysis. Your key is stored locally and never sent to our servers.</p>
+                <div class="api-input-group">
+                    <label for="apiKey">Anthropic API Key</label>
+                    <div class="input-with-icon">
+                        <input type="password" id="apiKey" placeholder="sk-ant-..." autocomplete="off">
+                        <button class="toggle-visibility" onclick="toggleApiKeyVisibility()">
+                            <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <button class="save-api-btn" onclick="saveApiKey()">Save API Key</button>
+                <div class="api-status" id="apiStatus"></div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Video Input Section -->
+            <section class="video-input-section">
+                <div class="input-container">
+                    <div class="input-header">
+                        <h2>Analyze Your Game</h2>
+                        <p>Load a video of your pickleball match to get personalized improvement tips</p>
+                    </div>
+
+                    <!-- Source Toggle -->
+                    <div class="source-toggle">
+                        <button class="source-btn active" data-source="youtube" onclick="setVideoSource('youtube')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
+                                <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="currentColor"/>
+                            </svg>
+                            <span>YouTube</span>
+                        </button>
+                        <button class="source-btn" data-source="local" onclick="setVideoSource('local')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+                                <polyline points="13 2 13 9 20 9"/>
+                                <polygon points="10 12 10 18 15 15 10 12" fill="currentColor"/>
+                            </svg>
+                            <span>Local File</span>
+                        </button>
+                    </div>
+
+                    <!-- YouTube Input -->
+                    <div class="url-input-group" id="youtubeInput">
+                        <div class="input-wrapper">
+                            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/>
+                                <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="currentColor"/>
+                            </svg>
+                            <input type="text" id="youtubeUrl" placeholder="https://youtube.com/watch?v=..." autocomplete="off">
+                        </div>
+                        <button class="load-video-btn" onclick="loadVideo()">
+                            <span>Load Video</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Local File Input -->
+                    <div class="file-input-group" id="localFileInput" style="display: none;">
+                        <div class="file-drop-zone" id="fileDropZone" onclick="document.getElementById('localVideoFile').click()">
+                            <input type="file" id="localVideoFile" accept=".mp4,.mov,video/mp4,video/quicktime" style="display: none;" onchange="handleFileSelect(event)">
+                            <div class="drop-zone-content">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
+                                <p class="drop-zone-text">Click to select or drag & drop</p>
+                                <p class="drop-zone-hint">MP4 or MOV files supported</p>
+                            </div>
+                        </div>
+                        <div class="selected-file" id="selectedFile" style="display: none;">
+                            <div class="file-info">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="23 7 16 12 23 17 23 7"/>
+                                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                                </svg>
+                                <span class="file-name" id="fileName"></span>
+                            </div>
+                            <button class="remove-file-btn" onclick="removeLocalFile()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"/>
+                                    <line x1="6" y1="6" x2="18" y2="18"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Video Player Section -->
+            <section class="video-section" id="videoSection">
+                <div class="video-container">
+                    <div class="video-wrapper" id="videoWrapper">
+                        <div class="video-placeholder" id="videoPlaceholder">
+                            <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="8" y="16" width="64" height="48" rx="4"/>
+                                <polygon points="32 30 52 40 32 50" fill="currentColor" opacity="0.3"/>
+                            </svg>
+                            <p>Your video will appear here</p>
+                        </div>
+                        <div id="youtubePlayer"></div>
+                        <video id="localPlayer" style="display: none;" controls playsinline>
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+
+                    <!-- Capture Controls -->
+                    <div class="capture-controls" id="captureControls">
+                        <div class="capture-info">
+                            <h4>Frame Capture</h4>
+                            <p>Capture key moments for AI analysis</p>
+                        </div>
+                        <div class="capture-actions">
+                            <button class="capture-btn" onclick="captureFrame()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <circle cx="12" cy="12" r="4" fill="currentColor"/>
+                                </svg>
+                                <span>Capture Frame</span>
+                            </button>
+                            <span class="capture-count" id="captureCount">0 frames captured</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Captured Frames -->
+                <div class="frames-panel" id="framesPanel">
+                    <div class="frames-header">
+                        <h4>Captured Frames</h4>
+                        <button class="clear-frames-btn" onclick="clearFrames()">Clear All</button>
+                    </div>
+                    <div class="frames-grid" id="framesGrid"></div>
+                </div>
+            </section>
+
+            <!-- Analysis Controls -->
+            <section class="analysis-controls" id="analysisControls">
+                <div class="player-config">
+                    <h4>Analysis Configuration</h4>
+                    <div class="config-options">
+                        <div class="config-group">
+                            <label for="playerPosition">Which player are you?</label>
+                            <select id="playerPosition">
+                                <option value="auto">Auto-detect / All players</option>
+                                <option value="near">Near side (bottom of screen)</option>
+                                <option value="far">Far side (top of screen)</option>
+                                <option value="left">Left side player</option>
+                                <option value="right">Right side player</option>
+                            </select>
+                        </div>
+                        <div class="config-group">
+                            <label for="skillLevel">Your skill level</label>
+                            <select id="skillLevel">
+                                <option value="beginner">Beginner (1.0 - 2.5)</option>
+                                <option value="intermediate" selected>Intermediate (3.0 - 3.5)</option>
+                                <option value="advanced">Advanced (4.0 - 4.5)</option>
+                                <option value="pro">Pro (5.0+)</option>
+                            </select>
+                        </div>
+                        <div class="config-group">
+                            <label for="focusAreas">Focus areas (optional)</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="focus" value="serves"> Serves
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="focus" value="returns"> Returns
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="focus" value="dinking"> Dinking
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="focus" value="volleys"> Volleys
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="focus" value="footwork"> Footwork
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="focus" value="positioning"> Court Positioning
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="focus" value="strategy"> Strategy
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="focus" value="third-shot"> Third Shot
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="analyze-btn" id="analyzeBtn" onclick="analyzeVideo()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                    </svg>
+                    <span>Analyze with AI</span>
+                </button>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="resultsSection">
+                <div class="results-header">
+                    <h3>Analysis Results</h3>
+                    <div class="results-actions">
+                        <button class="export-btn" onclick="exportResults()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            Export
+                        </button>
+                        <button class="new-analysis-btn" onclick="newAnalysis()">New Analysis</button>
+                    </div>
+                </div>
+
+                <div class="results-content" id="resultsContent">
+                    <!-- Results will be populated here -->
+                </div>
+            </section>
+
+            <!-- Loading Overlay -->
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="loading-content">
+                    <div class="loading-spinner">
+                        <div class="spinner-ring"></div>
+                        <div class="spinner-ball"></div>
+                    </div>
+                    <h3>Analyzing Your Game</h3>
+                    <p id="loadingStatus">Processing frames...</p>
+                    <div class="loading-progress">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>PicklePro Analyzer uses AI to provide coaching insights. Results are suggestions, not professional instruction.</p>
+        </footer>
+    </div>
+
+    <!-- Hidden canvas for frame capture -->
+    <canvas id="captureCanvas" style="display: none;"></canvas>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="src/analyzer.js"></script>
+    <script src="src/app.js"></script>
+</body>
+</html>

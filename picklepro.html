@@ -1,0 +1,2254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>PicklePro Analyzer - AI Video Coach</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+/* ===== CSS Variables ===== */
+:root {
+    --color-bg: #0a0a0f;
+    --color-bg-elevated: #12121a;
+    --color-bg-card: #1a1a24;
+    --color-bg-input: #0f0f16;
+    --color-border: #2a2a3a;
+    --color-border-focus: #4a4a6a;
+
+    --color-primary: #22c55e;
+    --color-primary-hover: #16a34a;
+    --color-primary-glow: rgba(34, 197, 94, 0.3);
+
+    --color-accent: #f59e0b;
+    --color-accent-hover: #d97706;
+
+    --color-text: #f4f4f5;
+    --color-text-secondary: #a1a1aa;
+    --color-text-muted: #71717a;
+
+    --color-success: #22c55e;
+    --color-warning: #f59e0b;
+    --color-error: #ef4444;
+    --color-info: #3b82f6;
+
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --shadow-glow: 0 0 40px var(--color-primary-glow);
+
+    --transition-fast: 150ms ease;
+    --transition-base: 250ms ease;
+    --transition-slow: 400ms ease;
+}
+
+/* ===== Reset & Base ===== */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-family);
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.6;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== App Container ===== */
+.app-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== Header ===== */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    color: var(--color-primary);
+}
+
+.logo-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.logo-accent {
+    color: var(--color-primary);
+}
+
+.settings-btn {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.settings-btn:hover {
+    background: var(--color-bg-elevated);
+    color: var(--color-text);
+    border-color: var(--color-border-focus);
+}
+
+.settings-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* ===== Settings Panel ===== */
+.settings-panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--transition-slow);
+    background: var(--color-bg-elevated);
+    border-bottom: 1px solid transparent;
+}
+
+.settings-panel.open {
+    max-height: 400px;
+    border-bottom-color: var(--color-border);
+}
+
+.settings-content {
+    padding: 24px 0;
+}
+
+.settings-content h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.settings-description {
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    margin-bottom: 20px;
+}
+
+.api-input-group {
+    margin-bottom: 16px;
+}
+
+.api-input-group label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--color-text-secondary);
+}
+
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-with-icon input {
+    flex: 1;
+    padding: 12px 48px 12px 16px;
+    background: var(--color-bg-input);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text);
+    font-size: 0.9375rem;
+    font-family: monospace;
+    transition: all var(--transition-fast);
+}
+
+.input-with-icon input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-glow);
+}
+
+.toggle-visibility {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color var(--transition-fast);
+}
+
+.toggle-visibility:hover {
+    color: var(--color-text);
+}
+
+.toggle-visibility svg {
+    width: 20px;
+    height: 20px;
+}
+
+.save-api-btn {
+    padding: 10px 20px;
+    background: var(--color-primary);
+    color: var(--color-bg);
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.save-api-btn:hover {
+    background: var(--color-primary-hover);
+}
+
+.api-status {
+    margin-top: 12px;
+    font-size: 0.875rem;
+    min-height: 20px;
+}
+
+.api-status.success {
+    color: var(--color-success);
+}
+
+.api-status.error {
+    color: var(--color-error);
+}
+
+/* ===== Main Content ===== */
+.main-content {
+    flex: 1;
+    padding: 40px 0;
+}
+
+/* ===== Video Input Section ===== */
+.video-input-section {
+    margin-bottom: 40px;
+}
+
+.input-container {
+    background: linear-gradient(135deg, var(--color-bg-card) 0%, var(--color-bg-elevated) 100%);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: 40px;
+}
+
+.input-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.input-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--color-text) 0%, var(--color-primary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.input-header p {
+    color: var(--color-text-secondary);
+    font-size: 1.0625rem;
+}
+
+/* ===== File Input ===== */
+.file-input-group {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.file-drop-zone {
+    border: 2px dashed var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 48px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    background: var(--color-bg-input);
+}
+
+.file-drop-zone:hover,
+.file-drop-zone.dragover {
+    border-color: var(--color-primary);
+    background: rgba(34, 197, 94, 0.05);
+}
+
+.drop-zone-content svg {
+    width: 48px;
+    height: 48px;
+    color: var(--color-text-muted);
+    margin-bottom: 16px;
+}
+
+.file-drop-zone:hover .drop-zone-content svg,
+.file-drop-zone.dragover .drop-zone-content svg {
+    color: var(--color-primary);
+}
+
+.drop-zone-text {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text);
+    margin-bottom: 4px;
+}
+
+.drop-zone-hint {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+}
+
+.selected-file {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: var(--color-bg-input);
+    border: 2px solid var(--color-primary);
+    border-radius: var(--radius-lg);
+}
+
+.file-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.file-info svg {
+    width: 24px;
+    height: 24px;
+    color: var(--color-primary);
+    flex-shrink: 0;
+}
+
+.file-name {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--color-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.remove-file-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.remove-file-btn:hover {
+    background: var(--color-error);
+    border-color: var(--color-error);
+    color: white;
+}
+
+.remove-file-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* ===== Video Section ===== */
+.video-section {
+    display: none;
+    margin-bottom: 32px;
+}
+
+.video-section.visible {
+    display: block;
+}
+
+.video-container {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+}
+
+.video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    background: #000;
+}
+
+.video-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+}
+
+.video-placeholder svg {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.video-placeholder.hidden {
+    display: none;
+}
+
+#localPlayer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+}
+
+/* ===== Capture Controls ===== */
+.capture-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    background: var(--color-bg-elevated);
+    border-top: 1px solid var(--color-border);
+}
+
+.capture-info h4 {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.capture-info p {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+}
+
+.capture-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.capture-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: var(--color-error);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.capture-btn:hover {
+    background: #dc2626;
+    transform: scale(1.02);
+}
+
+.capture-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+.capture-count {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+}
+
+/* ===== Frames Panel ===== */
+.frames-panel {
+    display: none;
+    padding: 24px;
+    background: var(--color-bg-elevated);
+    border-top: 1px solid var(--color-border);
+}
+
+.frames-panel.visible {
+    display: block;
+}
+
+.frames-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.frames-header h4 {
+    font-size: 0.9375rem;
+    font-weight: 600;
+}
+
+.clear-frames-btn {
+    padding: 6px 12px;
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 0.8125rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.clear-frames-btn:hover {
+    background: var(--color-bg-card);
+    color: var(--color-text);
+}
+
+.frames-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+}
+
+.frame-item {
+    position: relative;
+    aspect-ratio: 16/9;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 2px solid var(--color-border);
+    transition: all var(--transition-fast);
+}
+
+.frame-item:hover {
+    border-color: var(--color-primary);
+}
+
+.frame-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.frame-timestamp {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    padding: 4px 8px;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.frame-remove {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.8);
+    border: none;
+    border-radius: 50%;
+    color: var(--color-text);
+    cursor: pointer;
+    opacity: 0;
+    transition: all var(--transition-fast);
+}
+
+.frame-item:hover .frame-remove {
+    opacity: 1;
+}
+
+/* On touch devices, always show remove button */
+@media (hover: none) {
+    .frame-remove {
+        opacity: 1;
+    }
+}
+
+.frame-remove:hover {
+    background: var(--color-error);
+}
+
+/* ===== Analysis Controls ===== */
+.analysis-controls {
+    display: none;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: 32px;
+    margin-bottom: 32px;
+}
+
+.analysis-controls.visible {
+    display: block;
+}
+
+.player-config h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.config-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+.config-group label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    margin-bottom: 8px;
+}
+
+.config-group select {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--color-bg-input);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text);
+    font-size: 0.9375rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.config-group select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: var(--color-bg-input);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.checkbox-label:hover {
+    border-color: var(--color-border-focus);
+}
+
+.checkbox-label:has(input:checked) {
+    background: var(--color-primary-glow);
+    border-color: var(--color-primary);
+}
+
+.checkbox-label input {
+    accent-color: var(--color-primary);
+    width: 16px;
+    height: 16px;
+}
+
+.analyze-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+    color: var(--color-bg);
+    border: none;
+    border-radius: var(--radius-lg);
+    font-size: 1.125rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.analyze-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+}
+
+.analyze-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.analyze-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* ===== Results Section ===== */
+.results-section {
+    display: none;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+}
+
+.results-section.visible {
+    display: block;
+}
+
+.results-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 32px;
+    background: var(--color-bg-elevated);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.results-header h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.results-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.export-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.export-btn:hover {
+    background: var(--color-bg-card);
+    color: var(--color-text);
+}
+
+.export-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.new-analysis-btn {
+    padding: 10px 16px;
+    background: var(--color-primary);
+    color: var(--color-bg);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.new-analysis-btn:hover {
+    background: var(--color-primary-hover);
+}
+
+.results-content {
+    padding: 32px;
+}
+
+/* ===== Tip Cards ===== */
+.tip-category {
+    margin-bottom: 32px;
+}
+
+.tip-category:last-child {
+    margin-bottom: 0;
+}
+
+.category-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.category-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-primary-glow);
+    border-radius: var(--radius-md);
+    color: var(--color-primary);
+}
+
+.category-icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.category-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.tips-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tip-card {
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    transition: all var(--transition-fast);
+}
+
+.tip-card:hover {
+    border-color: var(--color-border-focus);
+}
+
+.tip-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 10px;
+}
+
+.tip-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.tip-priority {
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+}
+
+.tip-priority.high {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--color-error);
+}
+
+.tip-priority.medium {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--color-warning);
+}
+
+.tip-priority.low {
+    background: rgba(34, 197, 94, 0.15);
+    color: var(--color-success);
+}
+
+.tip-description {
+    color: var(--color-text-secondary);
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    margin-bottom: 12px;
+}
+
+.tip-drill {
+    background: var(--color-bg-input);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+}
+
+.tip-drill-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+}
+
+.tip-drill-text {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+}
+
+/* ===== Summary Card ===== */
+.summary-card {
+    background: linear-gradient(135deg, var(--color-bg-elevated) 0%, var(--color-bg-card) 100%);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: 28px;
+    margin-bottom: 32px;
+}
+
+.summary-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.summary-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-primary);
+    border-radius: var(--radius-lg);
+    color: var(--color-bg);
+}
+
+.summary-icon svg {
+    width: 26px;
+    height: 26px;
+}
+
+.summary-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.summary-subtitle {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+}
+
+.summary-content {
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+.summary-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--color-border);
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.stat-label {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ===== Loading Overlay ===== */
+.loading-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 10, 15, 0.95);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-overlay.visible {
+    display: flex;
+}
+
+.loading-content {
+    text-align: center;
+    max-width: 400px;
+    padding: 20px;
+}
+
+.loading-spinner {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 24px;
+}
+
+.spinner-ring {
+    position: absolute;
+    inset: 0;
+    border: 3px solid var(--color-border);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.spinner-ball {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(0.8); opacity: 0.6; }
+}
+
+.loading-content h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.loading-content p {
+    color: var(--color-text-secondary);
+    font-size: 0.9375rem;
+    margin-bottom: 24px;
+}
+
+.loading-progress {
+    width: 100%;
+    height: 4px;
+    background: var(--color-border);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--color-primary);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+/* ===== Footer ===== */
+.footer {
+    padding: 24px 0;
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+}
+
+.footer p {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .app-container {
+        padding: 0 16px;
+    }
+
+    .input-container {
+        padding: 24px;
+    }
+
+    .input-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .file-drop-zone {
+        padding: 32px 16px;
+    }
+
+    .capture-controls {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+    }
+
+    .config-options {
+        grid-template-columns: 1fr;
+    }
+
+    .results-header {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .results-content {
+        padding: 20px;
+    }
+
+    .summary-card {
+        padding: 20px;
+    }
+
+    .analysis-controls {
+        padding: 20px;
+    }
+}
+
+/* ===== Safari Banner ===== */
+.safari-banner {
+    display: none;
+    background: var(--color-warning);
+    color: #000;
+    padding: 14px 20px;
+    text-align: center;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.safari-banner.visible {
+    display: block;
+}
+
+.safari-banner a {
+    color: #000;
+    text-decoration: underline;
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-border-focus);
+}
+
+/* ===== Animations ===== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.4s ease forwards;
+}
+    </style>
+</head>
+<body>
+    <noscript>
+        <div style="position:fixed;top:0;left:0;right:0;bottom:0;background:#0a0a0f;color:#f4f4f5;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:-apple-system,sans-serif;padding:32px;">
+            <div style="text-align:center;max-width:340px;">
+                <div style="font-size:64px;margin-bottom:20px;">&#9757;</div>
+                <h1 style="font-size:24px;font-weight:700;margin-bottom:16px;color:#22c55e;">Open in Safari</h1>
+                <p style="font-size:17px;line-height:1.6;color:#a1a1aa;margin-bottom:24px;">This app needs Safari to work. Follow these steps:</p>
+                <div style="text-align:left;background:#1a1a24;border-radius:16px;padding:24px;font-size:17px;line-height:2;">
+                    <div><strong style="color:#22c55e;">1.</strong> Tap the <strong>Share</strong> button</div>
+                    <div style="color:#71717a;font-size:14px;padding-left:24px;">(square with arrow, bottom of screen)</div>
+                    <div style="margin-top:8px;"><strong style="color:#22c55e;">2.</strong> Scroll and tap <strong>"Open in Safari"</strong></div>
+                </div>
+            </div>
+        </div>
+    </noscript>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2.5"/>
+                        <circle cx="20" cy="20" r="8" fill="currentColor"/>
+                        <line x1="20" y1="2" x2="20" y2="10" stroke="currentColor" stroke-width="2"/>
+                        <line x1="20" y1="30" x2="20" y2="38" stroke="currentColor" stroke-width="2"/>
+                        <line x1="2" y1="20" x2="10" y2="20" stroke="currentColor" stroke-width="2"/>
+                        <line x1="30" y1="20" x2="38" y2="20" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </div>
+                <span class="logo-text">PicklePro<span class="logo-accent">Analyzer</span></span>
+            </div>
+            <button class="settings-btn" onclick="toggleSettings()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                </svg>
+            </button>
+        </header>
+
+        <!-- Settings Panel -->
+        <div class="settings-panel" id="settingsPanel">
+            <div class="settings-content">
+                <h3>API Configuration</h3>
+                <p class="settings-description">Enter your API key to enable AI-powered video analysis. Your key is stored locally and never sent to our servers.</p>
+                <div class="api-input-group">
+                    <label for="apiKey">Anthropic API Key</label>
+                    <div class="input-with-icon">
+                        <input type="password" id="apiKey" placeholder="sk-ant-..." autocomplete="off">
+                        <button class="toggle-visibility" onclick="toggleApiKeyVisibility()">
+                            <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <button class="save-api-btn" onclick="saveApiKey()">Save API Key</button>
+                <div class="api-status" id="apiStatus"></div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Video Input Section -->
+            <section class="video-input-section">
+                <div class="input-container">
+                    <div class="input-header">
+                        <h2>Analyze Your Game</h2>
+                        <p>Select a video from your device to get personalized improvement tips</p>
+                    </div>
+
+                    <!-- Local File Input -->
+                    <div class="file-input-group" id="localFileInput">
+                        <div class="file-drop-zone" id="fileDropZone" onclick="document.getElementById('localVideoFile').click()">
+                            <input type="file" id="localVideoFile" accept="video/*" style="display: none;" onchange="handleFileSelect(event)">
+                            <div class="drop-zone-content">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
+                                <p class="drop-zone-text">Tap to select a video</p>
+                                <p class="drop-zone-hint">MP4, MOV, or any video file</p>
+                            </div>
+                        </div>
+                        <div class="selected-file" id="selectedFile" style="display: none;">
+                            <div class="file-info">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="23 7 16 12 23 17 23 7"/>
+                                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                                </svg>
+                                <span class="file-name" id="fileName"></span>
+                            </div>
+                            <button class="remove-file-btn" onclick="removeLocalFile()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"/>
+                                    <line x1="6" y1="6" x2="18" y2="18"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Video Player Section -->
+            <section class="video-section" id="videoSection">
+                <div class="video-container">
+                    <div class="video-wrapper" id="videoWrapper">
+                        <div class="video-placeholder" id="videoPlaceholder">
+                            <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <rect x="8" y="16" width="64" height="48" rx="4"/>
+                                <polygon points="32 30 52 40 32 50" fill="currentColor" opacity="0.3"/>
+                            </svg>
+                            <p>Your video will appear here</p>
+                        </div>
+                        <video id="localPlayer" style="display: none;" controls playsinline>
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+
+                    <!-- Capture Controls -->
+                    <div class="capture-controls" id="captureControls">
+                        <div class="capture-info">
+                            <h4>Frame Capture</h4>
+                            <p>Pause the video, then capture key moments</p>
+                        </div>
+                        <div class="capture-actions">
+                            <button class="capture-btn" onclick="captureFrame()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <circle cx="12" cy="12" r="4" fill="currentColor"/>
+                                </svg>
+                                <span>Capture Frame</span>
+                            </button>
+                            <span class="capture-count" id="captureCount">0 frames captured</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Captured Frames -->
+                <div class="frames-panel" id="framesPanel">
+                    <div class="frames-header">
+                        <h4>Captured Frames</h4>
+                        <button class="clear-frames-btn" onclick="clearFrames()">Clear All</button>
+                    </div>
+                    <div class="frames-grid" id="framesGrid"></div>
+                </div>
+            </section>
+
+            <!-- Analysis Controls -->
+            <section class="analysis-controls" id="analysisControls">
+                <div class="player-config">
+                    <h4>Analysis Configuration</h4>
+                    <div class="config-options">
+                        <div class="config-group">
+                            <label for="playerPosition">Which player are you?</label>
+                            <select id="playerPosition">
+                                <option value="auto">Auto-detect / All players</option>
+                                <option value="near">Near side (bottom of screen)</option>
+                                <option value="far">Far side (top of screen)</option>
+                                <option value="left">Left side player</option>
+                                <option value="right">Right side player</option>
+                            </select>
+                        </div>
+                        <div class="config-group">
+                            <label for="skillLevel">Your skill level</label>
+                            <select id="skillLevel">
+                                <option value="beginner">Beginner (1.0 - 2.5)</option>
+                                <option value="intermediate" selected>Intermediate (3.0 - 3.5)</option>
+                                <option value="advanced">Advanced (4.0 - 4.5)</option>
+                                <option value="pro">Pro (5.0+)</option>
+                            </select>
+                        </div>
+                        <div class="config-group">
+                            <label for="focusAreas">Focus areas (optional)</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="focus" value="serves"> Serves
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="focus" value="returns"> Returns
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="focus" value="dinking"> Dinking
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="focus" value="volleys"> Volleys
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="focus" value="footwork"> Footwork
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="focus" value="positioning"> Court Positioning
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="focus" value="strategy"> Strategy
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="focus" value="third-shot"> Third Shot
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="analyze-btn" id="analyzeBtn" onclick="analyzeVideo()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                    </svg>
+                    <span>Analyze with AI</span>
+                </button>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="resultsSection">
+                <div class="results-header">
+                    <h3>Analysis Results</h3>
+                    <div class="results-actions">
+                        <button class="export-btn" onclick="exportResults()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            Export
+                        </button>
+                        <button class="new-analysis-btn" onclick="newAnalysis()">New Analysis</button>
+                    </div>
+                </div>
+
+                <div class="results-content" id="resultsContent">
+                </div>
+            </section>
+
+            <!-- Loading Overlay -->
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="loading-content">
+                    <div class="loading-spinner">
+                        <div class="spinner-ring"></div>
+                        <div class="spinner-ball"></div>
+                    </div>
+                    <h3>Analyzing Your Game</h3>
+                    <p id="loadingStatus">Processing frames...</p>
+                    <div class="loading-progress">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>PicklePro Analyzer uses AI to provide coaching insights. Results are suggestions, not professional instruction.</p>
+        </footer>
+    </div>
+
+    <!-- Hidden canvas for frame capture -->
+    <canvas id="captureCanvas" style="display: none;"></canvas>
+
+    <script>
+/**
+ * PicklePro Analyzer - AI Analysis Module
+ */
+class PickleballAnalyzer {
+    constructor() {
+        this.apiKey = null;
+        this.baseUrl = 'https://api.anthropic.com/v1/messages';
+        this.model = 'claude-sonnet-4-20250514';
+    }
+
+    setApiKey(key) {
+        this.apiKey = key;
+    }
+
+    getApiKey() {
+        return this.apiKey || localStorage.getItem('anthropic_api_key');
+    }
+
+    buildPrompt(config) {
+        const { playerPosition, skillLevel, focusAreas } = config;
+
+        const skillDescriptions = {
+            beginner: 'beginner (1.0-2.5 rating) who is still learning fundamental mechanics',
+            intermediate: 'intermediate player (3.0-3.5 rating) working on consistency and strategy',
+            advanced: 'advanced player (4.0-4.5 rating) refining technique and competitive play',
+            pro: 'professional-level player (5.0+) seeking elite-level optimization'
+        };
+
+        const positionInstructions = {
+            auto: 'Analyze all visible players and provide general feedback.',
+            near: 'Focus on the player on the near side (bottom of the screen/closer to camera).',
+            far: 'Focus on the player on the far side (top of the screen/farther from camera).',
+            left: 'Focus on the left-side player.',
+            right: 'Focus on the right-side player.'
+        };
+
+        let focusInstructions = '';
+        if (focusAreas && focusAreas.length > 0) {
+            focusInstructions = `\n\nPay special attention to these areas: ${focusAreas.join(', ')}.`;
+        }
+
+        return `You are an expert pickleball coach and video analyst with years of experience coaching players at all levels. Analyze these video frames from a pickleball match and provide specific, actionable coaching feedback.
+
+PLAYER CONTEXT:
+- Skill Level: ${skillDescriptions[skillLevel] || skillDescriptions.intermediate}
+- Player Focus: ${positionInstructions[playerPosition] || positionInstructions.auto}
+${focusInstructions}
+
+ANALYSIS INSTRUCTIONS:
+Examine the frames carefully for:
+
+1. **Stroke Mechanics**
+   - Paddle preparation and backswing
+   - Contact point and paddle angle
+   - Follow-through and recovery
+   - Grip and wrist position
+
+2. **Footwork & Movement**
+   - Split step timing
+   - Ready position stance
+   - Movement to the ball
+   - Recovery steps after shots
+
+3. **Court Positioning**
+   - Position relative to the kitchen (non-volley zone)
+   - Doubles positioning and spacing with partner
+   - Position during serves and returns
+   - Transition zone management
+
+4. **Strategy & Shot Selection**
+   - Shot selection appropriateness
+   - Recognizing attackable balls
+   - Patience in dinking rallies
+   - Third shot decisions
+
+5. **Body Mechanics**
+   - Balance and weight transfer
+   - Core engagement
+   - Knee bend and athletic stance
+   - Head and eye tracking
+
+RESPONSE FORMAT:
+Provide your analysis as a JSON object with this structure:
+{
+    "summary": "2-3 sentence overall assessment of the player's game",
+    "strengthsObserved": ["strength 1", "strength 2"],
+    "stats": {
+        "framesAnalyzed": <number>,
+        "tipsGenerated": <number>,
+        "priorityAreas": <number>
+    },
+    "categories": [
+        {
+            "name": "Category Name",
+            "icon": "one of: paddle, footwork, position, strategy, body",
+            "tips": [
+                {
+                    "title": "Specific issue or improvement area",
+                    "description": "Detailed explanation of what you observed and why it matters",
+                    "priority": "high/medium/low",
+                    "drill": "Specific practice drill or exercise to address this"
+                }
+            ]
+        }
+    ]
+}
+
+Be specific about what you SEE in the frames. Reference actual observations rather than generic advice. If you cannot clearly see something, acknowledge that limitation.
+
+Prioritize the most impactful improvements - focus on 2-3 key areas that will make the biggest difference for this player's level.`;
+    }
+
+    async analyzeFrames(frames, config, onProgress) {
+        const apiKey = this.getApiKey();
+        if (!apiKey) {
+            throw new Error('API key not configured. Please add your Anthropic API key in settings.');
+        }
+
+        if (!frames || frames.length === 0) {
+            throw new Error('No frames to analyze. Please capture at least one frame from the video.');
+        }
+
+        onProgress?.('Preparing frames for analysis...', 10);
+
+        const content = [];
+
+        for (let i = 0; i < frames.length; i++) {
+            const frame = frames[i];
+            const base64Data = frame.dataUrl.split(',')[1];
+
+            content.push({
+                type: 'image',
+                source: {
+                    type: 'base64',
+                    media_type: 'image/jpeg',
+                    data: base64Data
+                }
+            });
+
+            content.push({
+                type: 'text',
+                text: `Frame ${i + 1} - Timestamp: ${frame.timestamp}`
+            });
+        }
+
+        content.push({
+            type: 'text',
+            text: this.buildPrompt(config)
+        });
+
+        onProgress?.('Sending to AI for analysis...', 30);
+
+        const maxRetries = 3;
+        let lastError = null;
+
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                if (attempt > 1) {
+                    const waitSec = attempt * 5;
+                    onProgress?.(`API busy, retrying in ${waitSec}s... (attempt ${attempt}/${maxRetries})`, 30);
+                    await new Promise(r => setTimeout(r, waitSec * 1000));
+                    onProgress?.(`Retrying analysis (attempt ${attempt}/${maxRetries})...`, 35);
+                }
+
+                const response = await fetch(this.baseUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': apiKey,
+                        'anthropic-version': '2023-06-01',
+                        'anthropic-dangerous-direct-browser-access': 'true'
+                    },
+                    body: JSON.stringify({
+                        model: this.model,
+                        max_tokens: 4096,
+                        messages: [
+                            {
+                                role: 'user',
+                                content: content
+                            }
+                        ]
+                    })
+                });
+
+                if (response.status === 529 || response.status === 503) {
+                    lastError = new Error('API is temporarily overloaded');
+                    if (attempt < maxRetries) continue;
+                    throw lastError;
+                }
+
+                onProgress?.('Processing AI response...', 70);
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error?.message || `API request failed: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                onProgress?.('Parsing analysis results...', 90);
+
+                const textContent = data.content?.find(c => c.type === 'text');
+                if (!textContent) {
+                    throw new Error('No analysis text in response');
+                }
+
+                const analysisResult = this.parseAnalysisResponse(textContent.text);
+
+                onProgress?.('Analysis complete!', 100);
+
+                return analysisResult;
+
+            } catch (error) {
+                lastError = error;
+                if (attempt >= maxRetries) {
+                    console.error('Analysis error:', error);
+                    throw error;
+                }
+            }
+        }
+    }
+
+    parseAnalysisResponse(responseText) {
+        const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+
+        if (jsonMatch) {
+            try {
+                return JSON.parse(jsonMatch[0]);
+            } catch (e) {
+                console.warn('Failed to parse JSON from response, using fallback');
+            }
+        }
+
+        return this.createFallbackResponse(responseText);
+    }
+
+    createFallbackResponse(text) {
+        return {
+            summary: text.substring(0, 500),
+            strengthsObserved: ['Analysis completed'],
+            stats: {
+                framesAnalyzed: 0,
+                tipsGenerated: 1,
+                priorityAreas: 1
+            },
+            categories: [
+                {
+                    name: 'General Analysis',
+                    icon: 'paddle',
+                    tips: [
+                        {
+                            title: 'AI Analysis',
+                            description: text,
+                            priority: 'medium',
+                            drill: 'Review the analysis above and work on the areas mentioned.'
+                        }
+                    ]
+                }
+            ]
+        };
+    }
+}
+
+/**
+ * PicklePro Analyzer - Main Application
+ */
+
+// Global state
+const state = {
+    playerReady: false,
+    capturedFrames: [],
+    analysisResults: null,
+    analyzer: null,
+    localVideoFile: null,
+    localPlayer: null
+};
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', initializeApp);
+
+function initializeApp() {
+    state.analyzer = new PickleballAnalyzer();
+
+    const savedKey = localStorage.getItem('anthropic_api_key');
+    if (savedKey) {
+        document.getElementById('apiKey').value = savedKey;
+        updateApiStatus('API key loaded from storage', 'success');
+    }
+
+    document.addEventListener('keydown', handleKeyboardShortcuts);
+
+    state.localPlayer = document.getElementById('localPlayer');
+
+    setupDragAndDrop();
+}
+
+/**
+ * Drag and Drop Setup
+ */
+function setupDragAndDrop() {
+    const dropZone = document.getElementById('fileDropZone');
+    if (!dropZone) return;
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, () => {
+            dropZone.classList.add('dragover');
+        }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, () => {
+            dropZone.classList.remove('dragover');
+        }, false);
+    });
+
+    dropZone.addEventListener('drop', handleFileDrop, false);
+}
+
+function handleFileDrop(e) {
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+        processVideoFile(files[0]);
+    }
+}
+
+function handleFileSelect(e) {
+    const files = e.target.files;
+    if (files.length > 0) {
+        processVideoFile(files[0]);
+    }
+}
+
+function processVideoFile(file) {
+    if (!file.type.startsWith('video/')) {
+        alert('Please select a video file.');
+        return;
+    }
+
+    state.localVideoFile = file;
+
+    document.getElementById('fileDropZone').style.display = 'none';
+    document.getElementById('selectedFile').style.display = 'flex';
+    document.getElementById('fileName').textContent = file.name;
+
+    loadLocalVideo(file);
+}
+
+function removeLocalFile() {
+    state.localVideoFile = null;
+
+    document.getElementById('localVideoFile').value = '';
+
+    document.getElementById('fileDropZone').style.display = 'block';
+    document.getElementById('selectedFile').style.display = 'none';
+    document.getElementById('fileName').textContent = '';
+
+    document.getElementById('videoSection').classList.remove('visible');
+    document.getElementById('analysisControls').classList.remove('visible');
+
+    const localPlayer = state.localPlayer;
+    localPlayer.style.display = 'none';
+    localPlayer.src = '';
+    localPlayer.load();
+
+    clearFrames();
+}
+
+function loadLocalVideo(file) {
+    const videoUrl = URL.createObjectURL(file);
+
+    document.getElementById('videoSection').classList.add('visible');
+    document.getElementById('videoPlaceholder').classList.add('hidden');
+    document.getElementById('analysisControls').classList.add('visible');
+
+    const localPlayer = state.localPlayer;
+    localPlayer.style.display = 'block';
+    localPlayer.src = videoUrl;
+    localPlayer.load();
+
+    localPlayer.onloadedmetadata = () => {
+        state.playerReady = true;
+        console.log('Video ready:', file.name);
+    };
+
+    localPlayer.onerror = () => {
+        alert('Error loading video. Please try a different file.');
+        removeLocalFile();
+    };
+
+    clearFrames();
+}
+
+/**
+ * Settings Panel
+ */
+function toggleSettings() {
+    const panel = document.getElementById('settingsPanel');
+    panel.classList.toggle('open');
+}
+
+function toggleApiKeyVisibility() {
+    const input = document.getElementById('apiKey');
+    input.type = input.type === 'password' ? 'text' : 'password';
+}
+
+function saveApiKey() {
+    const apiKey = document.getElementById('apiKey').value.trim();
+
+    if (!apiKey) {
+        updateApiStatus('Please enter an API key', 'error');
+        return;
+    }
+
+    if (!apiKey.startsWith('sk-ant-')) {
+        updateApiStatus('Invalid API key format. Should start with sk-ant-', 'error');
+        return;
+    }
+
+    localStorage.setItem('anthropic_api_key', apiKey);
+    state.analyzer.setApiKey(apiKey);
+    updateApiStatus('API key saved successfully!', 'success');
+
+    setTimeout(() => {
+        toggleSettings();
+    }, 1500);
+}
+
+function updateApiStatus(message, type) {
+    const status = document.getElementById('apiStatus');
+    status.textContent = message;
+    status.className = 'api-status ' + type;
+}
+
+/**
+ * Frame Capture
+ */
+function captureFrame() {
+    const localPlayer = state.localPlayer;
+
+    if (!localPlayer || !localPlayer.src || localPlayer.readyState < 2) {
+        alert('Please load a video first');
+        return;
+    }
+
+    const currentTime = localPlayer.currentTime;
+    const formattedTime = formatTime(currentTime);
+
+    const canvas = document.getElementById('captureCanvas');
+    canvas.width = localPlayer.videoWidth || 1280;
+    canvas.height = localPlayer.videoHeight || 720;
+
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(localPlayer, 0, 0, canvas.width, canvas.height);
+
+    addTimestampOverlay(ctx, canvas, formattedTime);
+
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+
+    const frame = {
+        id: Date.now(),
+        timestamp: formattedTime,
+        timeSeconds: currentTime,
+        dataUrl: dataUrl,
+        videoId: state.localVideoFile ? state.localVideoFile.name : 'local'
+    };
+
+    state.capturedFrames.push(frame);
+    renderFrames();
+    updateCaptureCount();
+
+    flashCaptureIndicator();
+}
+
+function addTimestampOverlay(ctx, canvas, timestamp) {
+    const fontSize = Math.max(16, canvas.height / 20);
+    ctx.font = `bold ${fontSize}px Inter, sans-serif`;
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+
+    const textWidth = ctx.measureText(timestamp).width;
+    const padding = 10;
+    const x = canvas.width - textWidth - padding * 2;
+    const y = canvas.height - padding * 2 - fontSize;
+
+    ctx.fillRect(x - padding, y - padding, textWidth + padding * 2, fontSize + padding * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(timestamp, x, y + fontSize - 4);
+}
+
+function flashCaptureIndicator() {
+    const btn = document.querySelector('.capture-btn');
+    btn.style.transform = 'scale(1.1)';
+    setTimeout(() => {
+        btn.style.transform = '';
+    }, 150);
+}
+
+function formatTime(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+function renderFrames() {
+    const grid = document.getElementById('framesGrid');
+    const panel = document.getElementById('framesPanel');
+
+    if (state.capturedFrames.length === 0) {
+        panel.classList.remove('visible');
+        grid.innerHTML = '';
+        return;
+    }
+
+    panel.classList.add('visible');
+    grid.innerHTML = state.capturedFrames.map((frame, index) => `
+        <div class="frame-item fade-in" style="animation-delay: ${index * 50}ms">
+            <img src="${frame.dataUrl}" alt="Frame at ${frame.timestamp}">
+            <span class="frame-timestamp">${frame.timestamp}</span>
+            <button class="frame-remove" onclick="removeFrame(${frame.id})" title="Remove frame">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+        </div>
+    `).join('');
+}
+
+function removeFrame(frameId) {
+    state.capturedFrames = state.capturedFrames.filter(f => f.id !== frameId);
+    renderFrames();
+    updateCaptureCount();
+}
+
+function clearFrames() {
+    state.capturedFrames = [];
+    renderFrames();
+    updateCaptureCount();
+}
+
+function updateCaptureCount() {
+    const count = state.capturedFrames.length;
+    document.getElementById('captureCount').textContent =
+        `${count} frame${count !== 1 ? 's' : ''} captured`;
+}
+
+/**
+ * Keyboard Shortcuts
+ */
+function handleKeyboardShortcuts(e) {
+    if (e.code === 'KeyC' && !e.ctrlKey && !e.metaKey && document.activeElement.tagName !== 'INPUT') {
+        e.preventDefault();
+        captureFrame();
+    }
+}
+
+/**
+ * Analysis
+ */
+async function analyzeVideo() {
+    const apiKey = state.analyzer.getApiKey();
+    if (!apiKey) {
+        alert('Please configure your API key in settings first.');
+        toggleSettings();
+        return;
+    }
+
+    if (state.capturedFrames.length === 0) {
+        alert('Please capture at least one frame from the video to analyze.');
+        return;
+    }
+
+    const config = {
+        playerPosition: document.getElementById('playerPosition').value,
+        skillLevel: document.getElementById('skillLevel').value,
+        focusAreas: Array.from(document.querySelectorAll('input[name="focus"]:checked'))
+            .map(cb => cb.value)
+    };
+
+    showLoading();
+
+    try {
+        const results = await state.analyzer.analyzeFrames(
+            state.capturedFrames,
+            config,
+            updateLoadingProgress
+        );
+
+        state.analysisResults = results;
+        renderResults(results);
+        hideLoading();
+
+    } catch (error) {
+        hideLoading();
+        alert('Analysis failed: ' + error.message);
+        console.error('Analysis error:', error);
+    }
+}
+
+function showLoading() {
+    document.getElementById('loadingOverlay').classList.add('visible');
+    document.getElementById('analyzeBtn').disabled = true;
+}
+
+function hideLoading() {
+    document.getElementById('loadingOverlay').classList.remove('visible');
+    document.getElementById('analyzeBtn').disabled = false;
+}
+
+function updateLoadingProgress(status, percentage) {
+    document.getElementById('loadingStatus').textContent = status;
+    document.getElementById('progressBar').style.width = `${percentage}%`;
+}
+
+/**
+ * Results Rendering
+ */
+function renderResults(results) {
+    const resultsSection = document.getElementById('resultsSection');
+    const resultsContent = document.getElementById('resultsContent');
+
+    resultsSection.classList.add('visible');
+
+    setTimeout(() => {
+        resultsSection.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+
+    let html = '';
+
+    html += `
+        <div class="summary-card fade-in">
+            <div class="summary-header">
+                <div class="summary-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                    </svg>
+                </div>
+                <div>
+                    <h4 class="summary-title">Game Analysis Summary</h4>
+                    <p class="summary-subtitle">${state.capturedFrames.length} frames analyzed</p>
+                </div>
+            </div>
+            <div class="summary-content">
+                <p>${results.summary || 'Analysis complete. Review the tips below for detailed feedback.'}</p>
+                ${results.strengthsObserved && results.strengthsObserved.length > 0 ? `
+                    <p style="margin-top: 12px; color: var(--color-primary);">
+                        <strong>Strengths observed:</strong> ${results.strengthsObserved.join(', ')}
+                    </p>
+                ` : ''}
+            </div>
+            ${results.stats ? `
+                <div class="summary-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">${results.stats.framesAnalyzed || state.capturedFrames.length}</div>
+                        <div class="stat-label">Frames</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${results.stats.tipsGenerated || countTips(results)}</div>
+                        <div class="stat-label">Tips</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${results.stats.priorityAreas || results.categories?.length || 0}</div>
+                        <div class="stat-label">Focus Areas</div>
+                    </div>
+                </div>
+            ` : ''}
+        </div>
+    `;
+
+    if (results.categories && results.categories.length > 0) {
+        results.categories.forEach((category, catIndex) => {
+            html += `
+                <div class="tip-category fade-in" style="animation-delay: ${(catIndex + 1) * 100}ms">
+                    <div class="category-header">
+                        <div class="category-icon">
+                            ${getCategoryIcon(category.icon)}
+                        </div>
+                        <h4 class="category-title">${category.name}</h4>
+                    </div>
+                    <div class="tips-list">
+                        ${category.tips.map((tip, tipIndex) => `
+                            <div class="tip-card fade-in" style="animation-delay: ${(catIndex * 100) + (tipIndex * 50)}ms">
+                                <div class="tip-header">
+                                    <h5 class="tip-title">${tip.title}</h5>
+                                    <span class="tip-priority ${tip.priority || 'medium'}">${tip.priority || 'medium'}</span>
+                                </div>
+                                <p class="tip-description">${tip.description}</p>
+                                ${tip.drill ? `
+                                    <div class="tip-drill">
+                                        <div class="tip-drill-label">Practice Drill</div>
+                                        <p class="tip-drill-text">${tip.drill}</p>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    resultsContent.innerHTML = html;
+}
+
+function countTips(results) {
+    if (!results.categories) return 0;
+    return results.categories.reduce((sum, cat) => sum + (cat.tips?.length || 0), 0);
+}
+
+function getCategoryIcon(iconType) {
+    const icons = {
+        paddle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="9" rx="8" ry="6"/><line x1="12" y1="15" x2="12" y2="22"/></svg>',
+        footwork: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4l3-9-3-4H4l2 6z"/><path d="M16 20h4l-2-6 2-7h-4l-3 4z"/></svg>',
+        position: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/><line x1="3" y1="12" x2="21" y2="12"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>',
+        strategy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5"/><line x1="12" y1="22" x2="12" y2="15.5"/><polyline points="22 8.5 12 15.5 2 8.5"/></svg>',
+        body: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="3"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="12" y1="12" x2="8" y2="10"/><line x1="12" y1="12" x2="16" y2="10"/><line x1="12" y1="16" x2="9" y2="22"/><line x1="12" y1="16" x2="15" y2="22"/></svg>'
+    };
+    return icons[iconType] || icons.paddle;
+}
+
+/**
+ * Export & Reset
+ */
+function exportResults() {
+    if (!state.analysisResults) {
+        alert('No results to export');
+        return;
+    }
+
+    let markdown = `# PicklePro Analyzer Results\n\n`;
+    markdown += `**Date:** ${new Date().toLocaleDateString()}\n`;
+    if (state.localVideoFile) {
+        markdown += `**Video:** ${state.localVideoFile.name}\n`;
+    }
+    markdown += `**Frames Analyzed:** ${state.capturedFrames.length}\n\n`;
+    markdown += `## Summary\n${state.analysisResults.summary || 'N/A'}\n\n`;
+
+    if (state.analysisResults.categories) {
+        state.analysisResults.categories.forEach(cat => {
+            markdown += `## ${cat.name}\n\n`;
+            cat.tips.forEach(tip => {
+                markdown += `### ${tip.title} (${tip.priority} priority)\n`;
+                markdown += `${tip.description}\n\n`;
+                if (tip.drill) {
+                    markdown += `**Practice Drill:** ${tip.drill}\n\n`;
+                }
+            });
+        });
+    }
+
+    const blob = new Blob([markdown], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `pickleball-analysis-${new Date().toISOString().split('T')[0]}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function newAnalysis() {
+    state.analysisResults = null;
+    document.getElementById('resultsSection').classList.remove('visible');
+
+    clearFrames();
+
+    if (state.localVideoFile) {
+        removeLocalFile();
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+    </script>
+</body>
+</html>
